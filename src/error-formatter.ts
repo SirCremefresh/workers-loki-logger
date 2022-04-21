@@ -7,10 +7,13 @@ export function formatErrorToString(error: any): string {
   let errorMessage = 'error=';
   if (isNotNullOrUndefined(error.message)) {
     errorMessage += error.message;
-    errorMessage += ', type=' + error.constructor.name;
-  } else {
+  } else if (typeof error === 'object') {
+    errorMessage += JSON.stringify(error);
+  } else{
     errorMessage += error;
   }
+
+  errorMessage += ', type=' + error.constructor.name;
   if (isNotNullOrUndefined(error.stack)) {
     errorMessage += ', stack=' + error.stack;
   }
