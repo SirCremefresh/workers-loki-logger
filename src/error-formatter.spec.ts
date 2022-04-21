@@ -1,9 +1,6 @@
 import tap from 'tap';
 import {formatErrorToString} from './error-formatter';
 
-class CustomException extends Error {
-}
-
 await tap.test('should format Error object', async (t) => {
   const errorString = formatErrorToString(new Error('some-message'));
   t.match(errorString, /error=some-message, type=Error, stack=Error: some-message/);
@@ -17,6 +14,8 @@ await tap.test('should format TypeError', async (t) => {
 });
 
 await tap.test('should format CustomException', async (t) => {
+  class CustomException extends Error {
+  }
   const errorString = formatErrorToString(new CustomException('some-message'));
   t.match(errorString, /error=some-message, type=CustomException, stack=Error: some-message/);
   t.match(errorString, /at Test\.<anonymous> \(file.*error-formatter\.spec\.ts/);
