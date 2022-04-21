@@ -51,6 +51,7 @@ await tap.test('should format Map', async (t) => {
   const errorString = formatErrorToString(new Map([['name', 'John']]));
   t.equal(errorString, 'error={"name":"John"}, type=Map');
 });
+
 await tap.test('should format Set', async (t) => {
   const errorString = formatErrorToString(new Set(['John', 'Doe']));
   t.equal(errorString, 'error=["John","Doe"], type=Set');
