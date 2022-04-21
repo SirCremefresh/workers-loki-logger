@@ -7,9 +7,13 @@ export function formatErrorToString(error: any): string {
   let errorMessage = 'error=';
   if (isNotNullOrUndefined(error.message)) {
     errorMessage += error.message;
+  } else if (error instanceof Map) {
+    errorMessage += JSON.stringify(Object.fromEntries(error));
+  } else if (error instanceof Set) {
+    errorMessage += JSON.stringify(Array.from(error));
   } else if (typeof error === 'object') {
     errorMessage += JSON.stringify(error);
-  } else{
+  } else {
     errorMessage += error;
   }
 
