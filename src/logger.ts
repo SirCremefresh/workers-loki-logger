@@ -1,7 +1,7 @@
 import {formatErrorToString} from './error-formatter';
 import {isNotNullOrUndefined} from './lib';
 
-export interface LogReceiver {
+export interface LoggerReceiver {
   debug(...data: any[]): void;
 
   error(...data: any[]): void;
@@ -11,15 +11,17 @@ export interface LogReceiver {
   warn(...data: any[]): void;
 }
 
+type Fetch = (input: RequestInfo, init?: RequestInit) => Promise<Response>;
+
 export interface LoggerConfig {
   lokiSecret: string;
   stream: { [p: string]: string };
   cloudflareContext?: {};
   lokiUrl?: string;
-  fetch?: typeof fetch;
+  fetch?: Fetch;
   mdc?: { [p: string]: string };
   logMdcToConsole?: boolean;
-  logReceiver?: LogReceiver;
+  logReceiver?: LoggerReceiver;
 }
 
 export class Logger {
@@ -34,10 +36,10 @@ export class Logger {
   private readonly stream: { [p: string]: string };
   private readonly lokiSecret: string;
   private readonly lokiUrl: string;
-  private readonly fetch: typeof fetch;
+  private readonly fetch: Fetch;
   private readonly cloudflareContext: {};
   private readonly logMdcToConsole: boolean;
-  private readonly logReceiver: LogReceiver;
+  private readonly loggerReceiver: LoggerReceiver;
 
   constructor(
     loggerConfig: LoggerConfig
@@ -49,7 +51,7 @@ export class Logger {
     this.fetch = loggerConfig.fetch ?? fetch;
     this.cloudflareContext = loggerConfig.cloudflareContext ?? {};
     this.logMdcToConsole = loggerConfig.logMdcToConsole ?? true;
-    this.logReceiver = loggerConfig.logReceiver ?? console;
+    this.loggerReceiver = loggerConfig.logReceiver ?? console;
   }
 
   public mdcSet(key: string, value: string) {
@@ -66,12 +68,12 @@ export class Logger {
     return this.mdc.get(key);
   }
 
-  async flush() {
+  public async flush() {
     if (this.messages.length === 0) {
       console.debug('logger has no messages to flush');
       return;
     }
-    const mdcString = this.getMdcString();
+    const mdcString = this.mdcFormatString();
     if (this.logMdcToConsole) {
       console.info('flushing messages with mdc=' + mdcString);
     }
@@ -105,16 +107,16 @@ export class Logger {
     }
   }
 
-  info(message: string) {
+  public info(message: string) {
     this.messages.push({
       time: ++this.timeNanoSeconds,
       message,
       level: 'info',
     });
-    this.logReceiver.info(this.getMdcString() + message);
+    this.loggerReceiver.info(this.mdcFormatString() + message);
   }
 
-  error(message: string, error?: any) {
+  public error(message: string, error?: any) {
     if (isNotNullOrUndefined(error)) {
       message += formatErrorToString(error);
     }
@@ -123,10 +125,10 @@ export class Logger {
       message,
       level: 'error',
     });
-    this.logReceiver.error(this.getMdcString() + message, error);
+    this.loggerReceiver.error(this.mdcFormatString() + message, error);
   }
 
-  fatal(message: string, error?: any) {
+  public fatal(message: string, error?: any) {
     if (isNotNullOrUndefined(error)) {
       message += formatErrorToString(error);
     }
@@ -135,10 +137,10 @@ export class Logger {
       message,
       level: 'fatal',
     });
-    this.logReceiver.error(this.getMdcString() + message, error);
+    this.loggerReceiver.error(this.mdcFormatString() + message, error);
   }
 
-  warn(message: string, error?: any) {
+  public warn(message: string, error?: any) {
     if (isNotNullOrUndefined(error)) {
       message += formatErrorToString(error);
     }
@@ -147,10 +149,10 @@ export class Logger {
       message,
       level: 'warn',
     });
-    this.logReceiver.warn(this.getMdcString() + message, error);
+    this.loggerReceiver.warn(this.mdcFormatString() + message, error);
   }
 
-  private getMdcString() {
+  public mdcFormatString() {
     if (isNotNullOrUndefined(this.mdcString)) {
       return this.mdcString;
     }
