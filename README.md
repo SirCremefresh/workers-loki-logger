@@ -19,7 +19,8 @@ npm install workers-loki-logger
 
 When creating a logger and writing to it all logs are first stored in memory.
 It is sent to loki when the flush method is called.   
-It is recommended to use a wrapper function for the logger to ensure that the logs are flushed to loki.
+It is recommended to use a wrapper function for the logger to ensure that the logs are flushed to loki.   
+
 [Example with wrapper function](#Example with wrapper function)
 
 ## API
