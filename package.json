@@ -11,7 +11,7 @@
   "scripts": {
     "build": "rm -rf lib && tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
     "test": "NODE_NO_WARNINGS=1 tap --node-arg=--experimental-specifier-resolution=node --node-arg=--loader=ts-node/esm",
-    "prepublish": "npm run build"
+    "prepublishOnly": "npm patch && npm run build"
   },
   "keywords": [
     "cloudflare",
