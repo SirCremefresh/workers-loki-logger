@@ -1,3 +1,4 @@
+<!--suppress ALL -->
 <h1 align="center">Welcome to Workers Loki Logger 👋</h1>
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-0.1.7-blue.svg?cacheSeconds=2592000" />
