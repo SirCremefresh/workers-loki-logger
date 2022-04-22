@@ -1,11 +1,8 @@
 <!--suppress ALL -->
 <h1 align="center">Welcome to Workers Loki Logger 👋</h1>
-<p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.1.7-blue.svg?cacheSeconds=2592000" />
-  <a href="#" target="_blank">
-    <img alt="License: ISC" src="https://img.shields.io/badge/License-ISC-yellow.svg" />
-  </a>
-</p>
+
+![GitHub branch checks state](https://img.shields.io/github/checks-status/SirCremefresh/workers-loki-logger/master?style=flat-square)
+![npm](https://img.shields.io/npm/v/workers-loki-logger?style=flat-square)
 
 > A Logger for the Cloudflare workers environment that sends the logs to grafana loki
 
