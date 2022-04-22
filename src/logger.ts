@@ -47,7 +47,7 @@ export class Logger {
     this.lokiSecret = loggerConfig.lokiSecret;
     this.mdc = new Map(Object.entries(loggerConfig.mdc ?? {}));
     this.lokiUrl = loggerConfig.lokiUrl ?? 'https://logs-prod-eu-west-0.grafana.net';
-    this.fetch = loggerConfig.fetch ?? fetch.bind(fetch);
+    this.fetch = loggerConfig.fetch ?? ((input, init) => fetch(input, init));
     this.cloudflareContext = loggerConfig.cloudflareContext ?? {};
     this.loggerReceiver = loggerConfig.logReceiver ?? console;
     this.timeNanoSeconds = loggerConfig.timeNanoSeconds ?? Date.now() * 1000000;
