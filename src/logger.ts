@@ -81,7 +81,7 @@ export class Logger {
           stream: this.stream,
           values: this.messages.map((messageEntry) => [
             messageEntry.time.toString(),
-            mdcString + ' level=' + messageEntry.level + ' ' + messageEntry.message,
+            mdcString + 'level=' + messageEntry.level + ' ' + messageEntry.message,
           ]),
         },
       ],
@@ -154,9 +154,11 @@ export class Logger {
     if (isNotNullOrUndefined(this.mdcString)) {
       return this.mdcString;
     }
-    this.mdcString = Array.from(this.mdc.entries())
-      .map(([key, value]) => `${key}=${value}`)
-      .join(' ');
+    let newMdcString = '';
+    for (const entry of this.mdc.entries()) {
+      newMdcString += entry[0] + '=' + entry[1] + ' ';
+    }
+    this.mdcString = newMdcString;
     return this.mdcString;
   }
 }
