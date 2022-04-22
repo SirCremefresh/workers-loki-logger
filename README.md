@@ -70,6 +70,20 @@ logger.fatal('message');
 logger.fatal('message', new Error('some error'));
 ```
 
+### logger.{mdcSet,mdcDelete,mdcGet}()
+
+> Change MDC
+
+```typescript
+import {Logger} from 'workers-loki-logger';
+
+declare const logger: Logger;
+
+logger.mdcSet('key', 'value');
+logger.mdcGet('key');
+logger.mdcDelete('key');
+```
+
 ### logger.flush()
 
 > Write logs to loki
