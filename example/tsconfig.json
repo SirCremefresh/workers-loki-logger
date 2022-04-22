@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "es2022",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "types": [
+      "@cloudflare/workers-types"
+    ],
+    "moduleResolution": "Node"
+  }
+}
