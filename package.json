@@ -1,6 +1,6 @@
 {
   "name": "workers-loki-logger",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "A Logger for the Cloudflare workers environment that sends the logs to grafana loki",
   "module": "lib/esm/index.js",
   "main": "lib/cjs/index.js",
