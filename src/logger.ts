@@ -11,7 +11,7 @@ export interface LoggerReceiver {
   warn(...data: any[]): void;
 }
 
-type Fetch = (input: RequestInfo, init?: RequestInit) => Promise<Response>;
+type Fetch = (input: Request | string, init?: RequestInit) => Promise<Response>;
 
 export interface LoggerConfig {
   lokiSecret: string;
