@@ -118,7 +118,7 @@ export class Logger {
 
   public error(message: string, error?: any) {
     if (isNotNullOrUndefined(error)) {
-      message += formatErrorToString(error);
+      message += ' ' +formatErrorToString(error);
     }
     this.messages.push({
       time: ++this.timeNanoSeconds,
@@ -130,7 +130,7 @@ export class Logger {
 
   public fatal(message: string, error?: any) {
     if (isNotNullOrUndefined(error)) {
-      message += formatErrorToString(error);
+      message += ' ' +formatErrorToString(error);
     }
     this.messages.push({
       time: ++this.timeNanoSeconds,
@@ -142,7 +142,7 @@ export class Logger {
 
   public warn(message: string, error?: any) {
     if (isNotNullOrUndefined(error)) {
-      message += formatErrorToString(error);
+      message += ' ' + formatErrorToString(error);
     }
     this.messages.push({
       time: ++this.timeNanoSeconds,
