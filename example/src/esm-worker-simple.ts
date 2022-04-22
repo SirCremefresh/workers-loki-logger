@@ -4,6 +4,7 @@ function getLogger(context: ExecutionContext, lokiSecret: string) {
   return new Logger({
     cloudflareContext: context,
     lokiSecret,
+    lokiUrl: 'https://logs-prod-eu-west-0.grafana.net',
     stream: {
       worker: 'esm-worker-simple',
       environment: 'development',
