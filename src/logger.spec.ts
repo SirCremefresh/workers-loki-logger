@@ -1,6 +1,19 @@
 import tap from 'tap';
 import {Logger, LoggerReceiver} from './logger';
 
+type Fetch = (input: RequestInfo, init?: RequestInit) => Promise<Response>;
+
+class MockFetch {
+  public request: null | {
+    input: RequestInfo;
+    init?: RequestInit;
+  } = null;
+  public fetch: Fetch = (input, init) => {
+    this.request = {input, init};
+    return Promise.resolve(new Response());
+  };
+}
+
 class MockLoggerReceiver implements LoggerReceiver {
   debugLogs: any[][] = [];
   errorLogs: any[][] = [];
@@ -56,14 +69,14 @@ await tap.test(`Should set and override mdc`, async (t) => {
 });
 
 await tap.test(`Should send logs to loggerReceiver`, async (t) => {
-  const logReceiver = new MockLoggerReceiver();
+  const mockLogReceiver = new MockLoggerReceiver();
   const logger = new Logger({
     lokiSecret: '',
     stream: {},
     mdc: {
       foo: 'bar',
     },
-    logReceiver,
+    logReceiver: mockLogReceiver,
   });
 
   logger.info('info-message-1');
@@ -78,19 +91,52 @@ await tap.test(`Should send logs to loggerReceiver`, async (t) => {
   const mockedInfoMessage = (message: string) => ['foo=bar ' + message];
   const mockedMessage = (message: string, error?: string) => [...mockedInfoMessage(message), error];
 
-  t.same(logReceiver.infoLogs, [
+  t.same(mockLogReceiver.infoLogs, [
     mockedInfoMessage('info-message-1'),
     mockedInfoMessage('info-message-2'),
   ]);
-  t.same(logReceiver.warnLogs, [
+  t.same(mockLogReceiver.warnLogs, [
     mockedMessage('warn-message-1'),
     mockedMessage('warn-message-2 error=error-msg, type=String', 'error-msg'),
   ]);
-  t.same(logReceiver.errorLogs, [
+  t.same(mockLogReceiver.errorLogs, [
     mockedMessage('error-message-1'),
     mockedMessage('error-message-2 error=error-msg, type=String', 'error-msg'),
     mockedMessage('fatal-message-1'),
     mockedMessage('fatal-message-2 error=error-msg, type=String', 'error-msg'),
   ]);
+});
+
+await tap.test(`Should send logs to loki`, async (t) => {
+  const mockFetch = new MockFetch();
+  const logger = new Logger({
+    lokiSecret: 'some-secret',
+    stream: {
+      environment: 'development'
+    },
+    mdc: {
+      foo: 'bar',
+    },
+    logReceiver: new MockLoggerReceiver(),
+    fetch: mockFetch.fetch,
+    timeNanoSeconds: 0
+  });
+
+  logger.info('info-message-1');
+  logger.warn('info-message-1');
+  logger.error('info-message-1', 'error-msg');
+
+  await logger.flush();
+
+  t.not(mockFetch.request, null);
+  t.equal(mockFetch.request?.input, 'https://logs-prod-eu-west-0.grafana.net/loki/api/v1/push');
+  t.same(mockFetch.request?.init, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Basic some-secret',
+    },
+    body: '{"streams":[{"stream":{"environment":"development"},"values":[["1","foo=bar level=info info-message-1"],["2","foo=bar level=warn info-message-1"],["3","foo=bar level=error info-message-1 error=error-msg, type=String"]]}]}',
+  });
 });
 

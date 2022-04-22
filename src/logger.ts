@@ -20,8 +20,8 @@ export interface LoggerConfig {
   lokiUrl?: string;
   fetch?: Fetch;
   mdc?: { [p: string]: string };
-  logMdcToConsole?: boolean;
   logReceiver?: LoggerReceiver;
+  timeNanoSeconds?: number;
 }
 
 export class Logger {
@@ -30,15 +30,14 @@ export class Logger {
     message: string;
     level: 'info' | 'warn' | 'error' | 'fatal';
   }[] = [];
-  private timeNanoSeconds = Date.now() * 1000000;
   private mdcString: string | null = null;
+  private timeNanoSeconds: number;
   private readonly mdc: Map<string, string>;
   private readonly stream: { [p: string]: string };
   private readonly lokiSecret: string;
   private readonly lokiUrl: string;
   private readonly fetch: Fetch;
   private readonly cloudflareContext: {};
-  private readonly logMdcToConsole: boolean;
   private readonly loggerReceiver: LoggerReceiver;
 
   constructor(
@@ -50,8 +49,8 @@ export class Logger {
     this.lokiUrl = loggerConfig.lokiUrl ?? 'https://logs-prod-eu-west-0.grafana.net';
     this.fetch = loggerConfig.fetch ?? fetch;
     this.cloudflareContext = loggerConfig.cloudflareContext ?? {};
-    this.logMdcToConsole = loggerConfig.logMdcToConsole ?? true;
     this.loggerReceiver = loggerConfig.logReceiver ?? console;
+    this.timeNanoSeconds = loggerConfig.timeNanoSeconds ?? Date.now() * 1000000;
   }
 
   public mdcSet(key: string, value: string) {
@@ -70,13 +69,10 @@ export class Logger {
 
   public async flush() {
     if (this.messages.length === 0) {
-      console.debug('logger has no messages to flush');
+      this.loggerReceiver.debug('logger has no messages to flush');
       return;
     }
     const mdcString = this.mdcFormatString();
-    if (this.logMdcToConsole) {
-      console.info('flushing messages with mdc=' + mdcString);
-    }
     const request = {
       streams: [
         {
@@ -118,7 +114,7 @@ export class Logger {
 
   public error(message: string, error?: any) {
     if (isNotNullOrUndefined(error)) {
-      message += ' ' +formatErrorToString(error);
+      message += ' ' + formatErrorToString(error);
     }
     this.messages.push({
       time: ++this.timeNanoSeconds,
@@ -130,7 +126,7 @@ export class Logger {
 
   public fatal(message: string, error?: any) {
     if (isNotNullOrUndefined(error)) {
-      message += ' ' +formatErrorToString(error);
+      message += ' ' + formatErrorToString(error);
     }
     this.messages.push({
       time: ++this.timeNanoSeconds,
