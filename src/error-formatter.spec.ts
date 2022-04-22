@@ -1,9 +1,22 @@
 import tap from 'tap';
 import {formatErrorToString} from './error-formatter';
 
-await tap.test('should format Error object', async (t) => {
+await tap.test('should format Error', async (t) => {
   const errorString = formatErrorToString(new Error('some-message'));
   t.match(errorString, /error=some-message, type=Error, stack=Error: some-message/);
+  t.match(errorString, /at Test\.<anonymous> \(file.*error-formatter\.spec\.ts/);
+});
+
+await tap.test('should format NullPointer', async (t) => {
+  let error: any = null;
+  try {
+    (null as any).notExistingProperty();
+  } catch (e) {
+    error = e;
+  }
+  t.not(error, null);
+  const errorString = formatErrorToString(error);
+  t.match(errorString, /error=Cannot read properties of null \(reading 'notExistingProperty'\), type=TypeError, stack=TypeError: Cannot read properties of null \(reading 'notExistingProperty'\)/);
   t.match(errorString, /at Test\.<anonymous> \(file.*error-formatter\.spec\.ts/);
 });
 
@@ -16,6 +29,7 @@ await tap.test('should format TypeError', async (t) => {
 await tap.test('should format CustomException', async (t) => {
   class CustomException extends Error {
   }
+
   const errorString = formatErrorToString(new CustomException('some-message'));
   t.match(errorString, /error=some-message, type=CustomException, stack=Error: some-message/);
   t.match(errorString, /at Test\.<anonymous> \(file.*error-formatter\.spec\.ts/);
@@ -24,6 +38,12 @@ await tap.test('should format CustomException', async (t) => {
 await tap.test('should format null', async (t) => {
   const errorString = formatErrorToString(null);
   t.equal(errorString, 'error=null');
+});
+
+await tap.test('should format Promise', async (t) => {
+  const errorString = formatErrorToString(new Promise(() => {
+  }));
+  t.equal(errorString, 'error={}, type=Promise');
 });
 
 await tap.test('should format undefined', async (t) => {
