@@ -7,6 +7,14 @@ await tap.test('should format Error', async (t) => {
   t.match(errorString, /at Test\.<anonymous> \(file.*error-formatter\.spec\.ts/);
 });
 
+await tap.test('should not throw formatting circular structure', async (t) => {
+  const obj1 = {obj2: {}};
+  const obj2 = {obj1};
+  obj1.obj2 = obj2;
+  const errorString = formatErrorToString(obj2);
+  t.equal(errorString, 'error=Converting circular structure: [object Object], type=Object');
+});
+
 await tap.test('should format NullPointer', async (t) => {
   let error: any = null;
   try {

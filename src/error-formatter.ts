@@ -8,11 +8,11 @@ export function formatErrorToString(error: any): string {
   if (isNotNullOrUndefined(error.message)) {
     errorMessage += error.message;
   } else if (error instanceof Map) {
-    errorMessage += JSON.stringify(Object.fromEntries(error));
+    errorMessage += stringifyNoThrow(Object.fromEntries(error));
   } else if (error instanceof Set) {
-    errorMessage += JSON.stringify(Array.from(error));
+    errorMessage += stringifyNoThrow(Array.from(error));
   } else if (typeof error === 'object') {
-    errorMessage += JSON.stringify(error);
+    errorMessage += stringifyNoThrow(error);
   } else {
     errorMessage += error;
   }
@@ -22,4 +22,12 @@ export function formatErrorToString(error: any): string {
     errorMessage += ', stack=' + error.stack;
   }
   return errorMessage;
+}
+
+function stringifyNoThrow(object: any) {
+  try {
+    return JSON.stringify(object);
+  } catch (e) {
+    return 'Converting circular structure: ' + object;
+  }
 }
