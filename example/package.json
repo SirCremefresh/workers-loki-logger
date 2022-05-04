@@ -12,6 +12,6 @@
     "workers-loki-logger": "^0.1.7"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "3.8.0"
+    "@cloudflare/workers-types": "3.9.0"
   }
 }
