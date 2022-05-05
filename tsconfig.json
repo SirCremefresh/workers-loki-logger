@@ -13,9 +13,9 @@
     "moduleResolution": "Node"
   },
   "include": [
-    "./src"
+    "./src/**/*.ts"
   ],
-  "exclude": [
-    "**/*.spec.ts"
-  ]
+  "ts-node": {
+    "files": true
+  }
 }

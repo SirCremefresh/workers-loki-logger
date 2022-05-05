@@ -1,5 +1,5 @@
-import {formatErrorToString} from './error-formatter';
-import {isNotNullOrUndefined} from './lib';
+import {formatErrorToString} from './error-formatter.js';
+import {isNotNullOrUndefined} from './lib.js';
 
 export interface LoggerReceiver {
   debug(...data: any[]): void;

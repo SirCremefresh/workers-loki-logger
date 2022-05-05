@@ -9,8 +9,8 @@
   ],
   "type": "module",
   "scripts": {
-    "build": "rm -rf lib && tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
-    "test": "NODE_NO_WARNINGS=1 tap --node-arg=--experimental-specifier-resolution=node --node-arg=--loader=ts-node/esm",
+    "build": "rm -rf lib && tsc -p tsconfig-esm.json && tsc -p tsconfig-cjs.json",
+    "test": "node --loader=ts-node/esm --test src/*.spec.ts",
     "prepublishOnly": "npm version patch && npm run build"
   },
   "keywords": [
@@ -24,8 +24,6 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "17.0.25",
-    "@types/tap": "15.0.6",
-    "tap": "16.0.1",
     "ts-node": "10.7.0",
     "typescript": "4.6.3"
   }

@@ -1,85 +1,86 @@
-import tap from 'tap';
-import {formatErrorToString} from './error-formatter';
+import test from 'node:test';
+import {strict as assert} from 'node:assert';
+import {formatErrorToString} from './error-formatter.js';
 
-await tap.test('should format Error', async (t) => {
+await test('should format Error', async () => {
   const errorString = formatErrorToString(new Error('some-message'));
-  t.match(errorString, /error=some-message, type=Error, stack=Error: some-message/);
-  t.match(errorString, /at Test\.<anonymous> \(file.*error-formatter\.spec\.ts/);
+  assert.match(errorString, /error=some-message, type=Error, stack=Error: some-message/);
+  assert.match(errorString, /at TestContext.<anonymous> \(file.*error-formatter\.spec\.ts/);
 });
 
-await tap.test('should not throw formatting circular structure', async (t) => {
+await test('should not throw formatting circular structure', async () => {
   const obj1 = {obj2: {}};
   const obj2 = {obj1};
   obj1.obj2 = obj2;
   const errorString = formatErrorToString(obj2);
-  t.equal(errorString, 'error=Converting circular structure: [object Object], type=Object');
+  assert.equal(errorString, 'error=Converting circular structure: [object Object], type=Object');
 });
 
-await tap.test('should format NullPointer', async (t) => {
+await test('should format NullPointer', async () => {
   let error: any = null;
   try {
     (null as any).notExistingProperty();
   } catch (e) {
     error = e;
   }
-  t.not(error, null);
+  assert.notEqual(error, null);
   const errorString = formatErrorToString(error);
-  t.match(errorString, /error=Cannot read properties of null \(reading 'notExistingProperty'\), type=TypeError, stack=TypeError: Cannot read properties of null \(reading 'notExistingProperty'\)/);
-  t.match(errorString, /at Test\.<anonymous> \(file.*error-formatter\.spec\.ts/);
+  assert.match(errorString, /error=Cannot read properties of null \(reading 'notExistingProperty'\), type=TypeError, stack=TypeError: Cannot read properties of null \(reading 'notExistingProperty'\)/);
+  assert.match(errorString, /at TestContext.<anonymous> \(file.*error-formatter\.spec\.ts/);
 });
 
-await tap.test('should format TypeError', async (t) => {
+await test('should format TypeError', async () => {
   const errorString = formatErrorToString(new TypeError('some-message'));
-  t.match(errorString, /error=some-message, type=TypeError, stack=TypeError: some-message/);
-  t.match(errorString, /at Test\.<anonymous> \(file.*error-formatter\.spec\.ts/);
+  assert.match(errorString, /error=some-message, type=TypeError, stack=TypeError: some-message/);
+  assert.match(errorString, /at TestContext.<anonymous> \(file.*error-formatter\.spec\.ts/);
 });
 
-await tap.test('should format CustomException', async (t) => {
+await test('should format CustomException', async () => {
   class CustomException extends Error {
   }
 
   const errorString = formatErrorToString(new CustomException('some-message'));
-  t.match(errorString, /error=some-message, type=CustomException, stack=Error: some-message/);
-  t.match(errorString, /at Test\.<anonymous> \(file.*error-formatter\.spec\.ts/);
+  assert.match(errorString, /error=some-message, type=CustomException, stack=Error: some-message/);
+  assert.match(errorString, /at TestContext.<anonymous> \(file.*error-formatter\.spec\.ts/);
 });
 
-await tap.test('should format null', async (t) => {
+await test('should format null', async () => {
   const errorString = formatErrorToString(null);
-  t.equal(errorString, 'error=null');
+  assert.equal(errorString, 'error=null');
 });
 
-await tap.test('should format Promise', async (t) => {
+await test('should format Promise', async () => {
   const errorString = formatErrorToString(new Promise(() => {
   }));
-  t.equal(errorString, 'error={}, type=Promise');
+  assert.equal(errorString, 'error={}, type=Promise');
 });
 
-await tap.test('should format undefined', async (t) => {
+await test('should format undefined', async () => {
   const errorString = formatErrorToString(undefined);
-  t.equal(errorString, 'error=undefined');
+  assert.equal(errorString, 'error=undefined');
 });
 
-await tap.test('should format string', async (t) => {
+await test('should format string', async () => {
   const errorString = formatErrorToString('some-string');
-  t.equal(errorString, 'error=some-string, type=String');
+  assert.equal(errorString, 'error=some-string, type=String');
 });
 
-await tap.test('should format number', async (t) => {
+await test('should format number', async () => {
   const errorString = formatErrorToString(21);
-  t.equal(errorString, 'error=21, type=Number');
+  assert.equal(errorString, 'error=21, type=Number');
 });
 
-await tap.test('should format object', async (t) => {
+await test('should format object', async () => {
   const errorString = formatErrorToString({name: 'John'});
-  t.equal(errorString, 'error={"name":"John"}, type=Object');
+  assert.equal(errorString, 'error={"name":"John"}, type=Object');
 });
 
-await tap.test('should format Map', async (t) => {
+await test('should format Map', async () => {
   const errorString = formatErrorToString(new Map([['name', 'John']]));
-  t.equal(errorString, 'error={"name":"John"}, type=Map');
+  assert.equal(errorString, 'error={"name":"John"}, type=Map');
 });
 
-await tap.test('should format Set', async (t) => {
+await test('should format Set', async () => {
   const errorString = formatErrorToString(new Set(['John', 'Doe']));
-  t.equal(errorString, 'error=["John","Doe"], type=Set');
+  assert.equal(errorString, 'error=["John","Doe"], type=Set');
 });
