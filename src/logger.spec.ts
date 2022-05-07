@@ -1,6 +1,6 @@
 import {strict as assert} from 'node:assert';
 import test from 'node:test';
-import {Logger, LoggerReceiver} from './logger.js';
+import {Logger, LoggerReceiver} from './logger';
 
 type Fetch = (input: RequestInfo, init?: RequestInit) => Promise<Response>;
 

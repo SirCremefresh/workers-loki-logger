@@ -1,6 +1,6 @@
 import test from 'node:test';
 import {strict as assert} from 'node:assert';
-import {formatErrorToString} from './error-formatter.js';
+import {formatErrorToString} from './error-formatter';
 
 await test('should format Error', async () => {
   const errorString = formatErrorToString(new Error('some-message'));

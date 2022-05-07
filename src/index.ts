@@ -1,2 +1,2 @@
-export {Logger} from './logger.js';
-export {formatErrorToString} from './error-formatter.js';
+export {Logger} from './logger';
+export {formatErrorToString} from './error-formatter';
