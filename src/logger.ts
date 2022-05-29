@@ -97,7 +97,7 @@ export class Logger {
     );
     this.messages = [];
     if (isCloudflareContext(this.cloudflareContext)) {
-      this.cloudflareContext.waitUntil(saveLogsPromise);
+      await this.cloudflareContext.waitUntil(saveLogsPromise);
     } else {
       await saveLogsPromise;
     }
