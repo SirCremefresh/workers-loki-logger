@@ -1,11 +1,11 @@
-import test from 'node:test';
 import {strict as assert} from 'node:assert';
-import {formatErrorToString} from './error-formatter';
+import {formatErrorToString} from './error-formatter.js';
+import test from 'node:test';
 
 await test('should format Error', async () => {
   const errorString = formatErrorToString(new Error('some-message'));
   assert.match(errorString, /error=some-message, type=Error, stack=Error: some-message/);
-  assert.match(errorString, /at TestContext.<anonymous> \(file.*error-formatter\.spec\.ts/);
+  assert.match(errorString, /at TestContext.<anonymous> \(file.*error-formatter\.spec\.js/);
 });
 
 await test('should not throw formatting circular structure', async () => {
@@ -26,13 +26,13 @@ await test('should format NullPointer', async () => {
   assert.notEqual(error, null);
   const errorString = formatErrorToString(error);
   assert.match(errorString, /error=Cannot read properties of null \(reading 'notExistingProperty'\), type=TypeError, stack=TypeError: Cannot read properties of null \(reading 'notExistingProperty'\)/);
-  assert.match(errorString, /at TestContext.<anonymous> \(file.*error-formatter\.spec\.ts/);
+  assert.match(errorString, /at TestContext.<anonymous> \(file.*error-formatter\.spec\.js/);
 });
 
 await test('should format TypeError', async () => {
   const errorString = formatErrorToString(new TypeError('some-message'));
   assert.match(errorString, /error=some-message, type=TypeError, stack=TypeError: some-message/);
-  assert.match(errorString, /at TestContext.<anonymous> \(file.*error-formatter\.spec\.ts/);
+  assert.match(errorString, /at TestContext.<anonymous> \(file.*error-formatter\.spec\.js/);
 });
 
 await test('should format CustomException', async () => {
@@ -41,7 +41,7 @@ await test('should format CustomException', async () => {
 
   const errorString = formatErrorToString(new CustomException('some-message'));
   assert.match(errorString, /error=some-message, type=CustomException, stack=Error: some-message/);
-  assert.match(errorString, /at TestContext.<anonymous> \(file.*error-formatter\.spec\.ts/);
+  assert.match(errorString, /at TestContext.<anonymous> \(file.*error-formatter\.spec\.js/);
 });
 
 await test('should format null', async () => {

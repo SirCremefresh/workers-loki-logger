@@ -2,17 +2,17 @@
   "compilerOptions": {
     "target": "es2017",
     "module": "es2022",
-    "allowJs": false,
+    "allowJs": true,
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "outDir": "./lib/esm",
+    "outDir": "./build",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "allowSyntheticDefaultImports": true,
-    "moduleResolution": "Node"
+    "moduleResolution": "NodeNext",
   },
   "include": [
-    "./src/**/*.ts"
-  ]
+    "./src/**/*.ts",
+  ],
 }

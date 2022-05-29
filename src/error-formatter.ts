@@ -1,4 +1,4 @@
-import {isNotNullOrUndefined, isNullOrUndefined} from './lib';
+import {isNotNullOrUndefined, isNullOrUndefined} from './lib.js';
 
 export function formatErrorToString(error: any): string {
   if (isNullOrUndefined(error)) {

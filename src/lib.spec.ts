@@ -1,6 +1,6 @@
 import {strict as assert} from 'node:assert';
+import {isNotNullOrUndefined, isNullOrUndefined} from './lib.js';
 import test from 'node:test';
-import {isNotNullOrUndefined, isNullOrUndefined} from './lib';
 
 test('isNullOrUndefined', async (t) => {
   for (let {input, output} of [{

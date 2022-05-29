@@ -13,8 +13,9 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18.1.0
+          node-version: 18.2.0
           cache-dependency-path: package-lock.json
           cache: 'npm'
       - run: npm ci
+      - run: npm build
       - run: npm test
