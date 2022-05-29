@@ -1,6 +1,6 @@
 {
   "name": "workers-loki-logger",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "A Logger for the Cloudflare workers environment that sends the logs to grafana loki",
   "files": [
     "build/**/*"
