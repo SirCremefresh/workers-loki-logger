@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "workers-loki-logger": "^0.1.7"
+    "workers-loki-logger": "0.1.10"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "3.11.0",
