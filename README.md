@@ -1,7 +1,7 @@
 <!--suppress ALL -->
 <h1 align="center">Welcome to Workers Loki Logger 👋</h1>
 
-![GitHub branch checks state](https://img.shields.io/github/checks-status/SirCremefresh/workers-loki-logger/master?style=flat-square)
+[![Test](https://github.com/SirCremefresh/workers-loki-logger/actions/workflows/test.js.yml/badge.svg)](https://github.com/SirCremefresh/workers-loki-logger/actions/workflows/test.js.yml)
 ![npm](https://img.shields.io/npm/v/workers-loki-logger?style=flat-square)
 
 > A Logger for the Cloudflare workers environment that sends the logs to grafana loki
