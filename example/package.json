@@ -13,6 +13,6 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "3.18.0",
-    "typescript": "4.8.2"
+    "typescript": "4.8.4"
   }
 }
