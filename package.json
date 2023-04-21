@@ -1,6 +1,6 @@
 {
   "name": "workers-loki-logger",
-  "version": "0.1.14",
+  "version": "0.1.15-rc-1",
   "description": "A Logger for the Cloudflare workers environment that sends the logs to grafana loki",
   "files": [
     "build/**/*"
@@ -19,7 +19,7 @@
     "build": "rm -rf build && tsc -p tsconfig.json",
     "test": "node --test build/*.spec.js",
     "buildAndTest": "npm run build && npm run test",
-    "prepublishOnly": "npm version patch && npm run build"
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "cloudflare",
@@ -31,7 +31,7 @@
   "author": "Donato Wolfisberg (donato@wolfibserg.dev)",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "18.0.3",
-    "typescript": "4.8.4"
+    "@types/node": "18.15.13",
+    "typescript": "5.0.2"
   }
 }
