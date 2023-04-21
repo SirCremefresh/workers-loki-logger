@@ -21,7 +21,7 @@ export interface LoggerConfig {
   fetch?: Fetch;
   mdc?: { [p: string]: string };
   logReceiver?: LoggerReceiver;
-  timeNanoSeconds?: number;
+  getTimeNanoSeconds?: (callCount: number) => number;
 }
 
 export class Logger {
@@ -31,7 +31,7 @@ export class Logger {
     level: 'info' | 'warn' | 'error' | 'fatal';
   }[] = [];
   private mdcString: string | null = null;
-  private timeNanoSeconds: number;
+  private getTimeNanoSecondsCallCount: number = 0;
   private readonly mdc: Map<string, string>;
   private readonly stream: { [p: string]: string };
   private readonly lokiSecret: string;
@@ -39,6 +39,7 @@ export class Logger {
   private readonly fetch: Fetch;
   private readonly cloudflareContext: {};
   private readonly loggerReceiver: LoggerReceiver;
+  private readonly _getTimeNanoSeconds: (callCount: number) => number;
 
   constructor(
     loggerConfig: LoggerConfig
@@ -50,7 +51,11 @@ export class Logger {
     this.fetch = loggerConfig.fetch ?? ((input, init) => fetch(input, init));
     this.cloudflareContext = loggerConfig.cloudflareContext ?? {};
     this.loggerReceiver = loggerConfig.logReceiver ?? console;
-    this.timeNanoSeconds = loggerConfig.timeNanoSeconds ?? Date.now() * 1000000;
+    this._getTimeNanoSeconds = loggerConfig.getTimeNanoSeconds ?? ((count) => Date.now() * 1000000 + count);
+  }
+
+  private getTimeNanoSeconds(): number {
+    return this._getTimeNanoSeconds(this.getTimeNanoSecondsCallCount++)
   }
 
   public mdcSet(key: string, value: string) {
@@ -105,7 +110,7 @@ export class Logger {
 
   public info(message: string) {
     this.messages.push({
-      time: ++this.timeNanoSeconds,
+      time: this.getTimeNanoSeconds(),
       message,
       level: 'info',
     });
@@ -117,7 +122,7 @@ export class Logger {
       message += ' ' + formatErrorToString(error);
     }
     this.messages.push({
-      time: ++this.timeNanoSeconds,
+      time: this.getTimeNanoSeconds(),
       message,
       level: 'error',
     });
@@ -129,7 +134,7 @@ export class Logger {
       message += ' ' + formatErrorToString(error);
     }
     this.messages.push({
-      time: ++this.timeNanoSeconds,
+      time: this.getTimeNanoSeconds(),
       message,
       level: 'fatal',
     });
@@ -141,7 +146,7 @@ export class Logger {
       message += ' ' + formatErrorToString(error);
     }
     this.messages.push({
-      time: ++this.timeNanoSeconds,
+      time: this.getTimeNanoSeconds(),
       message,
       level: 'warn',
     });

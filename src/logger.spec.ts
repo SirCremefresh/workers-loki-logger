@@ -120,7 +120,7 @@ await test(`Should send logs to loki`, async () => {
     },
     logReceiver: new MockLoggerReceiver(),
     fetch: mockFetch.fetch,
-    timeNanoSeconds: 0
+    getTimeNanoSeconds: (callCount) => callCount
   });
 
   logger.info('info-message-1');
@@ -137,7 +137,7 @@ await test(`Should send logs to loki`, async () => {
       'Content-Type': 'application/json',
       'Authorization': 'Basic some-secret',
     },
-    body: '{"streams":[{"stream":{"environment":"development"},"values":[["1","foo=bar level=info info-message-1"],["2","foo=bar level=warn info-message-1"],["3","foo=bar level=error info-message-1 error=error-msg, type=String"]]}]}',
+    body: '{"streams":[{"stream":{"environment":"development"},"values":[["0","foo=bar level=info info-message-1"],["1","foo=bar level=warn info-message-1"],["2","foo=bar level=error info-message-1 error=error-msg, type=String"]]}]}',
   });
 });
 
