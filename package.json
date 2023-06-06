@@ -32,6 +32,6 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "18.16.6",
-    "typescript": "5.0.4"
+    "typescript": "5.1.3"
   }
 }
