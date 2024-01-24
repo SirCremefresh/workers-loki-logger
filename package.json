@@ -31,7 +31,7 @@
   "author": "Donato Wolfisberg (donato@wolfibserg.dev)",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "18.17.11",
+    "@types/node": "20.11.6",
     "typescript": "5.3.3"
   }
 }
